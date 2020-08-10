@@ -1,0 +1,32 @@
+.detailArticle {
+  margin-top: 35px;
+
+  .card-info {
+    border-top: 1px solid $body-bg;
+    .card-additional-info {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px;
+
+      p {
+        margin: 0;
+      }
+
+      .views {
+        color: $third-color;
+
+        span {
+          padding: 0 3px;
+        }
+      }
+    }
+    .comments-container {
+      padding: 15px;
+
+      .card {
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

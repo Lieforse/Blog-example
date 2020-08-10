@@ -1,0 +1,130 @@
+@import "~bootstrap/scss/bootstrap";
+@import "./variables.scss";
+@import "./detailArticle.scss";
+@import "./adminPage.scss";
+@import url(https://fonts.googleapis.com/css2?family=Allura&family=Karla&family=Montserrat:wght@400;600&display=swap);
+
+.articles-container {
+  margin-top: 35px;
+
+  .card {
+    margin-bottom: 10px;
+
+    .card-info {
+      border-top: 1px solid $body-bg;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .info-container {
+        display: flex;
+
+        p {
+          margin: 0 10px;
+        }
+
+        .comments {
+          color: $fourth-color;
+
+          span {
+            margin: 0 5px;
+          }
+        }
+
+        .views {
+          color: $third-color;
+
+          span {
+            margin: 0 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.sort-bar {
+  height: 70px;
+  background-color: $food-bg;
+  border-bottom: 1px solid $body-bg;
+  display: flex;
+  align-items: center;
+  .container {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 30px;
+
+    @media screen and (max-width: 450px) {
+      justify-content: flex-end;
+    }
+
+    .results {
+      @media screen and (max-width: 450px) {
+        display: none;
+      }
+    }
+
+    p {
+      font-family: $main-font;
+      font-size: 16px;
+      color: #000;
+      margin: 0;
+      display: block;
+    }
+
+    .sort-bar-container {
+      .sort {
+        display: flex;
+        cursor: pointer;
+        .mdi-chevron-down {
+          font-size: 18px;
+          padding-left: 2px;
+        }
+
+        &.active {
+          p {
+            color: $secondary-color;
+          }
+        }
+
+        &:hover {
+          p {
+            color: $secondary-color;
+          }
+        }
+      }
+
+      .sort-bar-menu {
+        position: absolute;
+        height: fit-content;
+        width: auto;
+        display: none;
+        border: 1px solid $body-bg;
+        background-color: $food-bg;
+        z-index: 5000;
+
+        &.active {
+          height: fit-content;
+          display: block;
+        }
+
+        p {
+          position: relative;
+          padding: 7px 12px;
+          cursor: pointer;
+          border-bottom: 1px solid $body-bg;
+
+          &:last-of-type {
+            border: none;
+          }
+
+          &:hover {
+            background-color: $secondary-color;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
