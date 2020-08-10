@@ -41,3 +41,30 @@ export const sortArticles = (sortFilter) => {
     sortFilter,
   };
 };
+
+export const addArticle = (form) => {
+  return {
+    type: "ADD_ARTICLE",
+    form,
+  };
+};
+
+export const deleteArticle = (articlesToDelete) => {
+  return {
+    type: "DELETE_ARTICLES",
+    articlesToDelete,
+  };
+};
+
+export const changeArticle = (form) => {
+  return {
+    type: "CHANGE_ARTICLE",
+    form,
+  };
+};
+
+export const restoreData = () => {
+  return {
+    type: "RESTORE_DATA",
+  };
+};

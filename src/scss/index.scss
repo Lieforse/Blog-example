@@ -4,6 +4,12 @@
 @import "./adminPage.scss";
 @import url(https://fonts.googleapis.com/css2?family=Allura&family=Karla&family=Montserrat:wght@400;600&display=swap);
 
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .articles-container {
   margin-top: 35px;
 
@@ -127,4 +133,14 @@
       }
     }
   }
+}
+
+.pagination {
+  .page-item {
+    cursor: pointer;
+  }
+}
+
+footer {
+  margin-top: auto;
 }

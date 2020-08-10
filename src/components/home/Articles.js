@@ -18,19 +18,21 @@ class Articles extends React.Component {
     let filteredComments = this.props.comments.filter(
       (item) => item.postId === id
     );
-    console.log(
-      JSON.parse(localStorage.getItem("views")).filter((item) => item[id])[
-        id - 1
-      ]
-    );
     return filteredComments.length;
+  };
+
+  showArticleViews = (id) => {
+    let views = this.props.views;
+    let articleViews = views.find((item) => item[id] != undefined);
+
+    return articleViews[id];
   };
 
   paginateArticles = () => {
     const indexOfLastPost = this.state.postsPerPage * this.state.currentPage;
     const indexOfFistPost =
       (this.state.currentPage - 1) * this.state.postsPerPage;
-    const currentPosts = this.props.filteredArticles.slice(
+    const currentPosts = this.props.articles.slice(
       indexOfFistPost,
       indexOfLastPost
     );
@@ -55,7 +57,7 @@ class Articles extends React.Component {
             </p>
             <p className="views">
               <span className="mdi mdi-eye"></span>
-              {JSON.parse(localStorage.getItem("views"))[item.id - 1][item.id]}
+              {this.showArticleViews(item.id)}
             </p>
           </div>
           <Link to={`/${item.id}`}>
@@ -76,7 +78,7 @@ class Articles extends React.Component {
       <div className="col-auto">
         {this.paginateArticles()}
         <Pagination
-          articles={this.props.filteredArticles}
+          articles={this.props.articles}
           postsPerPage={this.state.postsPerPage}
           paginate={this.paginate}
         />{" "}

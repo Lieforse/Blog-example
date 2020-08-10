@@ -10,17 +10,21 @@ class Home extends React.Component {
     this.props.fetchData();
   }
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
   render() {
     return (
       <div className="wrapper">
         <FilterBar
-          filteredArticles={this.props.filteredArticles}
+          articles={this.props.articles}
           comments={this.props.comments}
         />
         <div className="container articles-container">
           <Articles
             articles={this.props.articles}
-            filteredArticles={this.props.filteredArticles}
+            views={this.props.views}
             comments={this.props.comments}
           />
         </div>
@@ -30,10 +34,10 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     articles: state.articles,
-    filteredArticles: state.filteredArticles,
+    initialArticles: state.initialArticles,
+    views: state.views,
     comments: state.comments,
   };
 };

@@ -1,4 +1,11 @@
 import React from "react";
+import { connect } from "react-redux";
+import {
+  addArticle,
+  deleteArticle,
+  changeArticle,
+  restoreData,
+} from "../../store/actions/articlesActions";
 import { Pagination } from "../Pagination";
 
 class ArticlesManagement extends React.Component {
@@ -23,6 +30,7 @@ class ArticlesManagement extends React.Component {
     this.restoreData = this.restoreData.bind(this);
     this.changeArticle = this.changeArticle.bind(this);
     this.filterByUserId = this.filterByUserId.bind(this);
+    this.isPositiveCheck = this.isPositiveCheck.bind(this);
   }
 
   paginateArticles = () => {
@@ -31,12 +39,12 @@ class ArticlesManagement extends React.Component {
       (this.state.currentPage - 1) * this.state.postsPerPage;
     let currentPosts = [];
 
-    let filteredArticles = this.props.articles.filter(
+    let articles = this.props.articles.filter(
       (item) => item.userId === this.state.filterByUserId
     );
 
     if (this.state.filterByUserId) {
-      currentPosts = filteredArticles.slice(indexOfFistPost, indexOfLastPost);
+      currentPosts = articles.slice(indexOfFistPost, indexOfLastPost);
     } else {
       currentPosts = this.props.articles.slice(
         indexOfFistPost,
@@ -102,9 +110,14 @@ class ArticlesManagement extends React.Component {
     let textarea = document.getElementsByTagName("textarea");
     let input = document.getElementById("user-id-js");
     let elem = document.querySelector("#create-article-js");
+    let idInput = document.getElementById("id-js");
+
+    if (input <= 1) {
+      input.value = 1;
+    }
 
     if (param === "add") {
-      document.getElementById("id-js").classList.remove("active");
+      idInput.classList.remove("active");
       this.state.managementParam = "";
       input.value = "";
       textarea[0].value = "";
@@ -116,11 +129,11 @@ class ArticlesManagement extends React.Component {
         textarea[0].removeEventListener("keydown", resize);
         textarea[1].removeEventListener("keydown", resize);
         elem.classList.remove("active");
-        document.getElementById("id-js").classList.remove("active");
+        idInput.classList.remove("active");
         this.state.changedItems = null;
         this.state.managementParam = "";
       } else {
-        document.getElementById("id-js").classList.add("active");
+        idInput.classList.add("active");
         textarea[0].addEventListener("keydown", resize);
         textarea[1].addEventListener("keydown", resize);
         elem.classList.add("active");
@@ -139,7 +152,6 @@ class ArticlesManagement extends React.Component {
     }
 
     if (param === "change") {
-      let idInput = document.getElementById("id-js");
       let article = this.props.articles.find((item) => item.id === id);
       idInput.value = article.id;
       input.value = article.userId;
@@ -156,12 +168,24 @@ class ArticlesManagement extends React.Component {
     }
   };
 
+  isPositiveCheck = (event) => {
+    let value = event.target.value;
+    let input = document.getElementById("user-id-js");
+    if (value <= 1) {
+      input.value = 1;
+    }
+  };
+
   submitArticlesManagement = () => {
     if (!localStorage.getItem("articles")) {
       let articles = this.props.articles.slice();
       let serialObj = JSON.stringify(articles);
       localStorage.setItem("articles", serialObj);
     }
+
+    let textarea = document.getElementsByTagName("textarea");
+    let input = document.getElementById("user-id-js");
+    let elem = document.querySelector("#create-article-js");
 
     let rawForm = Array.from(document.querySelectorAll("#create-article-js"))[0]
       .children;
@@ -170,25 +194,21 @@ class ArticlesManagement extends React.Component {
       form = Object.assign(form, { [item.id]: item.value });
     });
 
-    const articles = JSON.parse(localStorage.getItem("articles"));
-
-    let article = {
-      userId: Number(form["user-id-js"]),
-      id: null,
-      title: form["title-js"],
-      body: form["text-js"],
-    };
     if (this.state.managementParam === "change") {
-      article.id = Number(form["id-js"]);
-      articles[article.id - 1] = article;
+      this.props.changeArticle(form);
       this.state.managementParam = "";
     } else {
-      article.id = articles[articles.length - 1].id + 1;
-      articles.push(article);
+      this.props.addArticle(form);
     }
 
-    let serialObj = JSON.stringify(articles);
-    localStorage.setItem("articles", serialObj);
+    elem.classList.remove("active");
+    document.getElementById("id-js").classList.remove("active");
+    this.state.changedItems = null;
+    this.state.managementParam = "";
+    this.state.managementParam = "";
+    input.value = "";
+    textarea[0].value = "";
+    textarea[1].value = "";
   };
 
   selectArticle = (event, id) => {
@@ -209,22 +229,7 @@ class ArticlesManagement extends React.Component {
       localStorage.setItem("articles", serialObj);
     }
 
-    const articles = JSON.parse(localStorage.getItem("articles"));
-    const foundIDs = this.state.articlesToDelete.map((id) =>
-      articles.findIndex((item) => item.id === id)
-    );
-
-    for (let i = 0; i < foundIDs.length; ++i) {
-      if (i > 0) {
-        let num = foundIDs[i] - i;
-        articles.splice(num, 1);
-      } else {
-        articles.splice(foundIDs[i], 1);
-      }
-    }
-
-    let serialObj = JSON.stringify(articles);
-    localStorage.setItem("articles", serialObj);
+    this.props.deleteArticle(this.state.articlesToDelete);
 
     this.state.articlesToDelete.splice(0);
 
@@ -238,7 +243,8 @@ class ArticlesManagement extends React.Component {
   };
 
   restoreData = () => {
-    localStorage.removeItem("articles");
+    this.props.restoreData();
+    window.location.reload(false);
   };
 
   changeArticle = (id) => {
@@ -288,6 +294,7 @@ class ArticlesManagement extends React.Component {
               className="user-id"
               id="user-id-js"
               placeholder="UserID"
+              onChange={this.isPositiveCheck}
             />
             <textarea
               type="text"
@@ -333,4 +340,14 @@ class ArticlesManagement extends React.Component {
   }
 }
 
-export default ArticlesManagement;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addArticle: (form) => dispatch(addArticle(form)),
+    deleteArticle: (articlesToDelete) =>
+      dispatch(deleteArticle(articlesToDelete)),
+    changeArticle: (form) => dispatch(changeArticle(form)),
+    restoreData: () => dispatch(restoreData()),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(ArticlesManagement);

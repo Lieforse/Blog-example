@@ -14,15 +14,16 @@ class DetailArticle extends React.Component {
       let obj = arr.find((item) => item[id]);
       obj[id] += 1;
       arr[id - 1] = obj;
-      console.log(arr);
       let serialObj = JSON.stringify(arr);
       localStorage.setItem("views", serialObj);
     }
     if (this.props.comments.length === 0) {
       this.props.fetchComments();
     }
+  }
 
-    console.log();
+  componentDidMount() {
+    window.scrollTo(0, 0);
   }
 
   showComments = () => {

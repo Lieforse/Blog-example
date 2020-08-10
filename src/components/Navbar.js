@@ -5,9 +5,9 @@ class Navbar extends React.Component {
   render() {
     return (
       <nav className="navbar navbar-dark navbar-expand-lg navbar-light bg-dark">
-        <a className="navbar-brand" href="#">
+        <NavLink to="/" className="navbar-brand">
           Blog
-        </a>
+        </NavLink>
         <button
           className="navbar-toggler"
           type="button"

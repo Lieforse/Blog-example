@@ -54,7 +54,7 @@ class FilterBar extends React.Component {
       <div className="sort-bar">
         <div className="container">
           <p className="results">
-            Showing {this.props.filteredArticles.length} results{" "}
+            Showing {this.props.articles.length} results{" "}
           </p>
           <div
             className="sort-bar-container"
